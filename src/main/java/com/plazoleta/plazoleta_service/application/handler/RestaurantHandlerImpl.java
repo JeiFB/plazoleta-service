@@ -24,7 +24,7 @@ public class RestaurantHandlerImpl implements IRestaurantHandler {
     @Override
     public void saveRestaurantInRestaurants(RestaurantRequestDto restaurantRequestDto) {
         Restaurant restaurant = restaurantRequestMapper.toRestaurant(restaurantRequestDto);
-
+        System.out.println("restaurantRequestDto es nullllllll? = " + restaurantRequestDto + restaurantRequestDto.getName());
         restaurantServicePort.saveRestaurant(restaurant);
 
     }

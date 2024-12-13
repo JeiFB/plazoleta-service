@@ -1,14 +1,18 @@
 package com.plazoleta.plazoleta_service.application.dtos.request;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class RestaurantAndEmployeeRequestDto {
-    @NotBlank(message = "El restaurante_id es requerido")
+    @NotNull(message = "El id del restaurante es requerido")
+    @Min(value = 1, message = "El ID del empleado debe ser mayor a 0")
     private Long restaurantId;
-    @NotBlank(message = "El empleado_id es requerido")
+    @NotNull(message = "El ide del empleado es requerido")
+    @Min(value = 1, message = "El ID del empleado debe ser mayor a 0")
     private  Long employeeId;
 }

@@ -32,7 +32,6 @@ public class RestaurantRestController {
             @ApiResponse(responseCode = "409", description = "Restaurant already exists", content = @Content)
     })
     @PostMapping("/")
-    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> saveRestaurantInRestaurants(@Valid @RequestBody RestaurantRequestDto restaurantRequestDto) {
         restaurantHandler.saveRestaurantInRestaurants(restaurantRequestDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -65,13 +64,13 @@ public class RestaurantRestController {
         return ResponseEntity.ok(restaurantHandler.getRestaurantById(restaurantId));
     }
 
-    @Operation(summary = "Get restaurant by Id_propietario")
+    @Operation(summary = "Get restaurant by Id_owner")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Restaurant deleted", content = @Content),
             @ApiResponse(responseCode = "404", description = "Restaurant not found", content = @Content)
     })
-    @GetMapping("/restaurantByIdPropietario/{id}")
-    public ResponseEntity<RestaurantResponseDto> getRestaurantByIdPropietario(@PathVariable(value = "id") Long idOwner) {
+    @GetMapping("/restaurantByIdOwner/{id}")
+    public ResponseEntity<RestaurantResponseDto> getRestaurantByIdOwner(@PathVariable(value = "id") Long idOwner) {
         return ResponseEntity.ok(restaurantHandler.getRestaurantByIdOwner(idOwner));
     }
 

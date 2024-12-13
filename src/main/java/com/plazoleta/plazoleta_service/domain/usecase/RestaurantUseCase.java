@@ -18,14 +18,14 @@ public class RestaurantUseCase implements IRestaurantServicePort {
     @Override
     public void saveRestaurant(Restaurant restaurant) {
         boolean userExist = userFeignClientPort.existUserById(restaurant.getIdOwner());
-        if(!userExist) throw  new IllegalArgumentException();
+        if(!userExist) throw  new IllegalArgumentException("El usuario no existe");
         User user = userFeignClientPort.getUserById(restaurant.getIdOwner());
-        restaurantPersistencePort.saveRestaurant(restaurant);
-        if (user.getRol().getId() != 4) throw  new IllegalArgumentException();
+
+        if (user.getRol().getId() != 3) throw  new IllegalArgumentException("El usuario no tiene rol de propietario");
 
         Restaurant restaurante = restaurantPersistencePort.getRestaurantByIdOwner(user.getId());
-        if (restaurante != null) throw  new IllegalArgumentException();
-        restaurantPersistencePort.saveRestaurant(restaurante);
+        if (restaurante != null) throw  new IllegalArgumentException("el restaurantes es null condicion restaurante != null");
+        restaurantPersistencePort.saveRestaurant(restaurant);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class RestaurantUseCase implements IRestaurantServicePort {
     @Override
     public Restaurant getRestaurantByIdOwner(Long idOwner) {
 
-        return null;
+        return restaurantPersistencePort.getRestaurantByIdOwner(idOwner);
     }
 
     @Override

@@ -12,5 +12,5 @@ import lombok.Setter;
 public class RestaurantAndEmployee {
     private Long id;
     private Long restaurantId;
-    private Long personId;
+    private Long employeeId;
 }

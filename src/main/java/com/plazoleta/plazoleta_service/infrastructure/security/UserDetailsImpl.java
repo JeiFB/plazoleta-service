@@ -16,7 +16,10 @@ public class UserDetailsImpl implements UserDetails {
     private  final UserDto userDto;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(userDto.getRol().getName()));
+        if (userDto.getRol() == null || userDto.getRol().getNameRol() == null || userDto.getRol().getNameRol().isEmpty()) {
+            throw new IllegalArgumentException("El usuario no tiene un rol válido asignado " + userDto.getRol().getNameRol() + userDto.getName() + userDto.getEmail());
+        }
+        return List.of(new SimpleGrantedAuthority(userDto.getRol().getNameRol()));
     }
 
     @Override
@@ -41,7 +44,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
+        return true;
     }
 
     @Override

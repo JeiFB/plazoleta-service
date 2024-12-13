@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -29,7 +30,9 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort {
 
     @Override
     public Restaurant getRestaurantByIdOwner(Long idOwner) {
-        return null;
+        Optional<RestaurantEntity> optionalRestaurantEntity = restaurantRepository.findByIdOwner(idOwner);
+        RestaurantEntity restaurantEntity = optionalRestaurantEntity.orElse(null);
+        return restaurantEntityMapper.toRestaurant(restaurantEntity);
     }
 
     @Override

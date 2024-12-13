@@ -12,6 +12,7 @@ import org.springframework.format.annotation.NumberFormat;
 @Getter
 @Setter
 public class RestaurantRequestDto {
+
     @NotBlank(message = "Nombre invalido")
     @Pattern(regexp = "^(?=.*[a-zA-Z])[0-9a-zA-Z ]+$", message = "El nombre puede contener números con letras pero no solo números")
     private String name;
