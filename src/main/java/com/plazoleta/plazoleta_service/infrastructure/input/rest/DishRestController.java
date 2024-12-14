@@ -63,4 +63,11 @@ public class DishRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PutMapping("/{id}/activate/{enableDisable}")
+    @PreAuthorize("hasAuthority('PROPIETARIO')")
+    public ResponseEntity<DishRequestDto> updateEnableDisableDish(@PathVariable(value = "id")Long dishId, @PathVariable(value = "enableDisable")Long enableDisable){
+        dishHandler.updateEnableDisableDish(dishId, enableDisable);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

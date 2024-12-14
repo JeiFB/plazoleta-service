@@ -44,4 +44,5 @@ public class DishJpaAdapter implements IDishPersistencePort {
     public List<Dish> dishesAllByRestaurantId(Long idRestaurant, Integer page, Integer size) {
         return List.of();
     }
+
 }

@@ -1,7 +1,8 @@
-package com.plazoleta.plazoleta_service.application.handler;
+package com.plazoleta.plazoleta_service.application.handler.impl;
 
 import com.plazoleta.plazoleta_service.application.dtos.request.RestaurantAndEmployeeRequestDto;
 import com.plazoleta.plazoleta_service.application.dtos.response.RestaurantAndEmployeeResponseDto;
+import com.plazoleta.plazoleta_service.application.handler.IRestaurantAndEmployeeHandler;
 import com.plazoleta.plazoleta_service.application.mapper.IRestaurantAndEmployeeRequestMapper;
 import com.plazoleta.plazoleta_service.application.mapper.IRestaurantAndEmployeeResponseMapper;
 import com.plazoleta.plazoleta_service.domain.api.IRestaurantAndEmployeeServicePort;
@@ -15,7 +16,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class RestaurantAndEmployeeHandler implements IRestaurantAndEmployeeHandler {
+public class RestaurantAndEmployeeHandlerImpl implements IRestaurantAndEmployeeHandler {
 
     private final IRestaurantAndEmployeeRequestMapper restaurantAndEmployeeRequestMapper;
     private final IRestaurantAndEmployeeResponseMapper restaurantAndEmployeeResponseMapper;

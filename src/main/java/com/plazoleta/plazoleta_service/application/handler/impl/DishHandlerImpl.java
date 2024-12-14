@@ -1,8 +1,9 @@
-package com.plazoleta.plazoleta_service.application.handler;
+package com.plazoleta.plazoleta_service.application.handler.impl;
 
 import com.plazoleta.plazoleta_service.application.dtos.request.DishRequestDto;
 import com.plazoleta.plazoleta_service.application.dtos.request.DishUpdateRequestDto;
 import com.plazoleta.plazoleta_service.application.dtos.response.DishResponseDto;
+import com.plazoleta.plazoleta_service.application.handler.IDishHandler;
 import com.plazoleta.plazoleta_service.application.mapper.IDishRequestMapper;
 import com.plazoleta.plazoleta_service.application.mapper.IDishResponseMapper;
 import com.plazoleta.plazoleta_service.domain.api.IDishServicePort;
@@ -16,7 +17,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class DishHandlerImpl implements IDishHandler{
+public class DishHandlerImpl implements IDishHandler {
 
 
     private final IDishServicePort dishServicePort;
@@ -45,5 +46,10 @@ public class DishHandlerImpl implements IDishHandler{
         Dish dish = dishRequestMapper.toDish(dishRequestDto);
 
         dishServicePort.createDish(dish);
+    }
+
+    @Override
+    public void updateEnableDisableDish(Long idDish, Long flag) {
+        dishServicePort.updateEnableDisableDish(idDish, flag);
     }
 }
