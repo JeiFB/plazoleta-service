@@ -1,7 +1,7 @@
 package com.plazoleta.plazoleta_service.infrastructure.output.jpa.adapter;
 
 import com.plazoleta.plazoleta_service.domain.model.RestaurantAndEmployee;
-import com.plazoleta.plazoleta_service.domain.spi.IRestaurantAndEmployeePersistencePort;
+import com.plazoleta.plazoleta_service.domain.spi.persistence.IRestaurantAndEmployeePersistencePort;
 import com.plazoleta.plazoleta_service.infrastructure.output.jpa.entity.RestaurantAndEmployeeEntity;
 import com.plazoleta.plazoleta_service.infrastructure.output.jpa.mapper.IRestaurantAndEmployeeEntityMapper;
 import com.plazoleta.plazoleta_service.infrastructure.output.jpa.repository.IRestaurantAndEmployeeRepository;

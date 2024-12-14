@@ -1,8 +1,10 @@
 package com.plazoleta.plazoleta_service.application.handler.impl;
 
 import com.plazoleta.plazoleta_service.application.dtos.request.RestaurantRequestDto;
+import com.plazoleta.plazoleta_service.application.dtos.response.RestaurantPaginationResponseDto;
 import com.plazoleta.plazoleta_service.application.dtos.response.RestaurantResponseDto;
 import com.plazoleta.plazoleta_service.application.handler.IRestaurantHandler;
+import com.plazoleta.plazoleta_service.application.mapper.IRestaurantPaginationResponseMapper;
 import com.plazoleta.plazoleta_service.application.mapper.IRestaurantRequestMapper;
 import com.plazoleta.plazoleta_service.application.mapper.IRestaurantResponseMapper;
 import com.plazoleta.plazoleta_service.domain.api.IRestaurantServicePort;
@@ -21,30 +23,34 @@ public class RestaurantHandlerImpl implements IRestaurantHandler {
     private final IRestaurantServicePort restaurantServicePort;
     private final IRestaurantRequestMapper restaurantRequestMapper;
     private final IRestaurantResponseMapper restaurantResponseMapper;
+    private final IRestaurantPaginationResponseMapper restaurantPaginationResponseMapper;
 
     @Override
     public void saveRestaurantInRestaurants(RestaurantRequestDto restaurantRequestDto) {
         Restaurant restaurant = restaurantRequestMapper.toRestaurant(restaurantRequestDto);
-        System.out.println("restaurantRequestDto es nullllllll? = " + restaurantRequestDto + restaurantRequestDto.getName());
         restaurantServicePort.saveRestaurant(restaurant);
 
     }
 
     @Override
     public RestaurantResponseDto getRestaurantById(Long id) {
-        RestaurantResponseDto restaurantResponseDto = restaurantResponseMapper.toResponse(restaurantServicePort.getRestaurantById(id));
-        return restaurantResponseDto;
+        return restaurantResponseMapper.toResponse(restaurantServicePort.getRestaurantById(id));
     }
 
     @Override
     public RestaurantResponseDto getRestaurantByIdOwner(Long idOwner) {
-        RestaurantResponseDto restaurantResponseDto = restaurantResponseMapper.toResponse(restaurantServicePort.getRestaurantByIdOwner(idOwner));
-        return restaurantResponseDto;
+
+        return restaurantResponseMapper.toResponse(restaurantServicePort.getRestaurantByIdOwner(idOwner));
     }
 
     @Override
     public List<RestaurantResponseDto> getAllRestaurants() {
         return restaurantResponseMapper.toResponseList(restaurantServicePort.getAllRestaurants());
+    }
+
+    @Override
+    public List<RestaurantPaginationResponseDto> getRestaurantsWithPagination(Integer page, Integer size) {
+        return restaurantPaginationResponseMapper.toResponseListPagination(restaurantServicePort.getRestaurantWithPagination(page,size));
     }
 
     @Override

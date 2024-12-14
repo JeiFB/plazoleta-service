@@ -1,7 +1,7 @@
 package com.plazoleta.plazoleta_service.infrastructure.output.jpa.adapter;
 
 import com.plazoleta.plazoleta_service.domain.model.Dish;
-import com.plazoleta.plazoleta_service.domain.spi.IDishPersistencePort;
+import com.plazoleta.plazoleta_service.domain.spi.persistence.IDishPersistencePort;
 import com.plazoleta.plazoleta_service.infrastructure.output.jpa.entity.DishEntity;
 import com.plazoleta.plazoleta_service.infrastructure.output.jpa.mapper.IDishEntityMapper;
 import com.plazoleta.plazoleta_service.infrastructure.output.jpa.repository.IDishRepository;

@@ -2,8 +2,8 @@ package com.plazoleta.plazoleta_service.domain.usecase;
 
 import com.plazoleta.plazoleta_service.domain.api.IDishServicePort;
 import com.plazoleta.plazoleta_service.domain.model.Dish;
-import com.plazoleta.plazoleta_service.domain.spi.IDishPersistencePort;
-import com.plazoleta.plazoleta_service.domain.spi.IRestaurantPersistencePort;
+import com.plazoleta.plazoleta_service.domain.spi.persistence.IDishPersistencePort;
+import com.plazoleta.plazoleta_service.domain.spi.persistence.IRestaurantPersistencePort;
 import com.plazoleta.plazoleta_service.domain.spi.bearertoken.IToken;
 import lombok.RequiredArgsConstructor;
 

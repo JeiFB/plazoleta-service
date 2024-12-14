@@ -1,11 +1,14 @@
 package com.plazoleta.plazoleta_service.infrastructure.output.jpa.adapter;
 
 import com.plazoleta.plazoleta_service.domain.model.Restaurant;
-import com.plazoleta.plazoleta_service.domain.spi.IRestaurantPersistencePort;
+import com.plazoleta.plazoleta_service.domain.spi.persistence.IRestaurantPersistencePort;
 import com.plazoleta.plazoleta_service.infrastructure.output.jpa.entity.RestaurantEntity;
 import com.plazoleta.plazoleta_service.infrastructure.output.jpa.mapper.IRestaurantEntityMapper;
 import com.plazoleta.plazoleta_service.infrastructure.output.jpa.repository.IRestaurantRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -39,12 +42,20 @@ public class RestaurantJpaAdapter implements IRestaurantPersistencePort {
 
     @Override
     public List<Restaurant> getAllRestaurant() {
-        return List.of();
+        List<RestaurantEntity> restaurantEntityList =  restaurantRepository.findAll();
+        if(restaurantEntityList.isEmpty()) throw new IllegalArgumentException("no hay datos");
+        return restaurantEntityMapper.toRestaurantModelList(restaurantEntityList);
     }
 
     @Override
     public List<Restaurant> getRestaurantsWithPagination(Integer page, Integer size) {
-        return List.of();
+        PageRequest pages = PageRequest.of(page,size, Sort.by(Sort.Direction.ASC,"name"));
+        Page<RestaurantEntity> restaurantPage = restaurantRepository.findAll(pages);
+        List<RestaurantEntity> restaurantEntityList = restaurantPage.getContent();
+        if(restaurantEntityList.isEmpty()){
+            throw new IllegalArgumentException("No hay datos");
+        }
+        return restaurantEntityMapper.toRestaurantModelList(restaurantEntityList);
     }
 
     @Override

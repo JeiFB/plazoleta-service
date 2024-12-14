@@ -1,4 +1,4 @@
-package com.plazoleta.plazoleta_service.domain.spi;
+package com.plazoleta.plazoleta_service.domain.spi.persistence;
 
 import com.plazoleta.plazoleta_service.domain.model.RestaurantAndEmployee;
 

@@ -3,7 +3,7 @@ package com.plazoleta.plazoleta_service.domain.usecase;
 import com.plazoleta.plazoleta_service.domain.api.IRestaurantServicePort;
 import com.plazoleta.plazoleta_service.domain.model.Restaurant;
 import com.plazoleta.plazoleta_service.domain.model.User;
-import com.plazoleta.plazoleta_service.domain.spi.IRestaurantPersistencePort;
+import com.plazoleta.plazoleta_service.domain.spi.persistence.IRestaurantPersistencePort;
 import com.plazoleta.plazoleta_service.domain.spi.feignClients.IUserFeignClientPort;
 import lombok.RequiredArgsConstructor;
 
@@ -41,12 +41,13 @@ public class RestaurantUseCase implements IRestaurantServicePort {
 
     @Override
     public List<Restaurant> getAllRestaurants() {
-        return List.of();
+        return restaurantPersistencePort.getAllRestaurant();
     }
 
     @Override
     public List<Restaurant> getRestaurantWithPagination(Integer page, Integer size) {
-        return List.of();
+
+        return restaurantPersistencePort.getRestaurantsWithPagination(page, size);
     }
 
     @Override

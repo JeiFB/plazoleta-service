@@ -2,8 +2,8 @@ package com.plazoleta.plazoleta_service.domain.usecase;
 
 import com.plazoleta.plazoleta_service.domain.model.Dish;
 import com.plazoleta.plazoleta_service.domain.model.Restaurant;
-import com.plazoleta.plazoleta_service.domain.spi.IDishPersistencePort;
-import com.plazoleta.plazoleta_service.domain.spi.IRestaurantPersistencePort;
+import com.plazoleta.plazoleta_service.domain.spi.persistence.IDishPersistencePort;
+import com.plazoleta.plazoleta_service.domain.spi.persistence.IRestaurantPersistencePort;
 import com.plazoleta.plazoleta_service.domain.spi.bearertoken.IToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

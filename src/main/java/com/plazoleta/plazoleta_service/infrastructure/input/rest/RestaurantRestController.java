@@ -2,6 +2,7 @@ package com.plazoleta.plazoleta_service.infrastructure.input.rest;
 
 
 import com.plazoleta.plazoleta_service.application.dtos.request.RestaurantRequestDto;
+import com.plazoleta.plazoleta_service.application.dtos.response.RestaurantPaginationResponseDto;
 import com.plazoleta.plazoleta_service.application.dtos.response.RestaurantResponseDto;
 import com.plazoleta.plazoleta_service.application.handler.IRestaurantHandler;
 
@@ -51,6 +52,20 @@ public class RestaurantRestController {
         return ResponseEntity.ok(restaurantHandler.getAllRestaurants());
     }
 
+    @Operation(summary = "Get all restaurants with pagination")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "All restaurants returned paginated",
+                    content = @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = RestaurantPaginationResponseDto.class)))),
+            @ApiResponse(responseCode = "404", description = "No data found", content = @Content)
+    })
+    @GetMapping("/page/{page}/size/{size}")
+    public  ResponseEntity<List<RestaurantPaginationResponseDto>> getAllRestaurantsPagination(@PathVariable(value = "page" )Integer page, @PathVariable(value = "size") Integer size){
+        return ResponseEntity.ok(restaurantHandler.getRestaurantsWithPagination(page,size));
+    }
+
+
+
     @Operation(summary = "Get restaurant by Id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Restaurant returned",
@@ -73,6 +88,8 @@ public class RestaurantRestController {
     public ResponseEntity<RestaurantResponseDto> getRestaurantByIdOwner(@PathVariable(value = "id") Long idOwner) {
         return ResponseEntity.ok(restaurantHandler.getRestaurantByIdOwner(idOwner));
     }
+
+
 
 
     @Operation(summary = "Detele a restaurant")
