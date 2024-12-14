@@ -17,6 +17,7 @@ public interface IDishRequestMapper {
     @Mapping(target = "category.id", source = "category")
     @Mapping(target = "restaurantId", source = "restaurantId")
     Dish toDish(DishRequestDto dishRequestDto);
+
     Dish toDishUpdate(DishUpdateRequestDto dishUpdateRequestDto);
 
 

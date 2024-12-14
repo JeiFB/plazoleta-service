@@ -1,7 +1,8 @@
-package com.plazoleta.plazoleta_service.application.handler;
+package com.plazoleta.plazoleta_service.application.handler.impl;
 
 import com.plazoleta.plazoleta_service.application.dtos.request.RestaurantRequestDto;
 import com.plazoleta.plazoleta_service.application.dtos.response.RestaurantResponseDto;
+import com.plazoleta.plazoleta_service.application.handler.IRestaurantHandler;
 import com.plazoleta.plazoleta_service.application.mapper.IRestaurantRequestMapper;
 import com.plazoleta.plazoleta_service.application.mapper.IRestaurantResponseMapper;
 import com.plazoleta.plazoleta_service.domain.api.IRestaurantServicePort;

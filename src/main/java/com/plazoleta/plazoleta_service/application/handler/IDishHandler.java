@@ -14,5 +14,6 @@ public interface IDishHandler {
 
     void updateDish(Long id, DishUpdateRequestDto dishUpdateRequestDto);
     void createDishInDishes(DishRequestDto dishRequestDto);
+    void  updateEnableDisableDish(Long idDish, Long flag);
 
 }

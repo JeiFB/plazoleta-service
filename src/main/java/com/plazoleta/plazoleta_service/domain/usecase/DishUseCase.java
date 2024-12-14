@@ -29,6 +29,8 @@ public class DishUseCase implements IDishServicePort {
 
     @Override
     public void createDish(Dish dish) {
+        if(restaurantPersistencePort.getRestaurantById(dish.getRestaurantId().getId())==null) throw new IllegalArgumentException("No existe restaurante");
+        validateOwnerAuthWithOwnerRestaurant(dish);
         dish.setActive(true);
         dishPersistencePort.createDish(dish);
     }
@@ -54,6 +56,16 @@ public class DishUseCase implements IDishServicePort {
     }
 
     @Override
+    public void updateEnableDisableDish(Long idDish, Long flag) {
+        Dish dish = dishPersistencePort.getDishById(idDish);
+        if(dish == null)throw new IllegalArgumentException("este plato no existe");
+        validateOwnerAuthWithOwnerRestaurant(dish);
+        boolean isEnableOrDisable = (flag==1);
+        dish.setActive(isEnableOrDisable);
+        dishPersistencePort.createDish(dish);
+    }
+
+    @Override
     public List<Dish> dishesAllByRestaurantById(Long idRestaurant, Integer page, Integer size) {
         List<Dish> dishModelList=dishPersistencePort.dishesAllByRestaurantId(idRestaurant, page,size);
         List<Dish> platosActivos=new ArrayList<>();
@@ -70,6 +82,6 @@ public class DishUseCase implements IDishServicePort {
         if(bearerToken==null) throw new IllegalArgumentException();
         Long idOwnerAuth = token.getUserAuthenticationId(bearerToken);
         Long idOwnerRestaurant =  restaurantPersistencePort.getRestaurantById(dish.getRestaurantId().getId()).getIdOwner();
-        if(idOwnerAuth!=idOwnerRestaurant) throw new IllegalArgumentException();
+        if(idOwnerAuth.equals(idOwnerRestaurant)) throw new IllegalArgumentException("No es propietario de este restaurante");
     }
 }

@@ -10,6 +10,7 @@ public interface IDishServicePort {
     List<Dish> getAllDishes();
     void createDish(Dish dish);
     void updateDish(Long id, Dish dish);
+    void updateEnableDisableDish(Long idDish, Long flag);
     List<Dish> dishesAllByRestaurantById(Long idRestaurant, Integer page, Integer size);
 
 
