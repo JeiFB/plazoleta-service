@@ -2,6 +2,7 @@ package com.plazoleta.plazoleta_service.application.dtos.response;
 
 
 import com.plazoleta.plazoleta_service.domain.model.Category;
+import com.plazoleta.plazoleta_service.domain.model.Restaurant;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +14,8 @@ public class DishResponseDto {
     private Integer price;
     private String description;
     private String imageUrl;
-    private Category category;
     private Boolean active;
+    private Restaurant restaurantId;
+    private Category category;
 
 }

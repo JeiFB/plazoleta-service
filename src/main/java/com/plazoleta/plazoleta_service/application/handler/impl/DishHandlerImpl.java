@@ -36,6 +36,13 @@ public class DishHandlerImpl implements IDishHandler {
     }
 
     @Override
+    public List<DishResponseDto> dishesAllByRestaurantById(Long restaurantId, Integer page, Integer size) {
+        List<Dish> dishes = dishServicePort.dishesAllByRestaurantById(restaurantId,page, size);
+        if(dishes.isEmpty()) throw  new IllegalArgumentException("no hay datos");
+        return dishResponseMapper.toDishList(dishes);
+    }
+
+    @Override
     public void updateDish(Long id, DishUpdateRequestDto dishUpdateRequestDto) {
         Dish dish = dishRequestMapper.toDishUpdate(dishUpdateRequestDto);
         dishServicePort.updateDish(id, dish);

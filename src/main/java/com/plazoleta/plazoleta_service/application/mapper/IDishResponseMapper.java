@@ -16,4 +16,5 @@ public interface IDishResponseMapper {
 
     DishResponseDto toDishDto(Dish dish);
     List<DishResponseDto> toDishList(List<Dish> dishes);
+    List<DishResponseDto> toResponseList(List<Dish> dishes);
 }

@@ -70,4 +70,10 @@ public class DishRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/restaurant/{idRestaurant}/page/{page}/size/{size}")
+    public ResponseEntity<List<DishResponseDto>> getAllDishesByRestaurant(@PathVariable(value = "idRestaurant" ) Long idRestaurant,@PathVariable(value = "page" )Integer page, @PathVariable(value = "size") Integer size){
+
+        return ResponseEntity.ok(dishHandler.dishesAllByRestaurantById(idRestaurant,page,size));
+    }
+
 }
