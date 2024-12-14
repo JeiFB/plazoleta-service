@@ -35,11 +35,13 @@ public class DishRestController {
             @ApiResponse(responseCode = "404", description = "No data found", content = @Content)
     })
     @GetMapping("/")
+    @PreAuthorize("hasAuthority('CLIENTE')")
     public ResponseEntity<List<DishResponseDto>> getAllDishes(){
         return  ResponseEntity.ok(dishHandler.getAllDishes());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('CLIENTE')")
     public ResponseEntity<DishResponseDto> getDishById(@PathVariable(value = "id")Long dishId){
         return ResponseEntity.ok(dishHandler.getDishById(dishId));
     }
@@ -58,6 +60,7 @@ public class DishRestController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('PROPIETARIO')")
     public ResponseEntity<DishRequestDto> updateDish(@Valid @PathVariable(value = "id")Long dishId, @RequestBody DishUpdateRequestDto dishUpdateRequestDto){
         dishHandler.updateDish(dishId, dishUpdateRequestDto);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -71,6 +74,7 @@ public class DishRestController {
     }
 
     @GetMapping("/restaurant/{idRestaurant}/page/{page}/size/{size}")
+    @PreAuthorize("hasAuthority('CLIENTE')")
     public ResponseEntity<List<DishResponseDto>> getAllDishesByRestaurant(@PathVariable(value = "idRestaurant" ) Long idRestaurant,@PathVariable(value = "page" )Integer page, @PathVariable(value = "size") Integer size){
 
         return ResponseEntity.ok(dishHandler.dishesAllByRestaurantById(idRestaurant,page,size));
