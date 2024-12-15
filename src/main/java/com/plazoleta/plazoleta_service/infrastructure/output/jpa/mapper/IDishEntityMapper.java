@@ -15,9 +15,11 @@ import java.util.List;
 )
 public interface IDishEntityMapper {
 
+    @Mapping(target = "restaurant.id", source = "restaurantId.id")
     @Mapping(target = "category.id", source = "category.id")
     DishEntity toEntity(Dish dish);
 
+    @Mapping(target = "restaurantId.id", source = "restaurant.id")
     @Mapping(target = "category.id", source = "category.id")
     Dish toDish(DishEntity dishEntity);
 

@@ -1,21 +1,19 @@
 package com.plazoleta.plazoleta_service.application.dtos.response;
 
-
 import com.plazoleta.plazoleta_service.domain.model.Category;
-import com.plazoleta.plazoleta_service.domain.model.Restaurant;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class DishResponseDto {
+public class OrderDishResponseDto {
+
     private Long id;
     private String name;
-    private Integer price;
+    private String price;
     private String description;
     private String imageUrl;
-    private Boolean active;
-    private Restaurant restaurantId;
-    private Category category;
-
+    private Category categoryId;
+    private String amount;
 }

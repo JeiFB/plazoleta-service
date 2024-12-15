@@ -38,7 +38,7 @@ public class DishEntity {
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name="restaurant_id")
-    private RestaurantEntity restaurantId;
+    private RestaurantEntity restaurant;
 
     private Boolean active;
 }

@@ -2,8 +2,8 @@ package com.plazoleta.plazoleta_service.domain.usecase;
 
 import com.plazoleta.plazoleta_service.domain.api.IDishServicePort;
 import com.plazoleta.plazoleta_service.domain.model.Dish;
-import com.plazoleta.plazoleta_service.domain.spi.IDishPersistencePort;
-import com.plazoleta.plazoleta_service.domain.spi.IRestaurantPersistencePort;
+import com.plazoleta.plazoleta_service.domain.spi.persistence.IDishPersistencePort;
+import com.plazoleta.plazoleta_service.domain.spi.persistence.IRestaurantPersistencePort;
 import com.plazoleta.plazoleta_service.domain.spi.bearertoken.IToken;
 import lombok.RequiredArgsConstructor;
 
@@ -67,6 +67,7 @@ public class DishUseCase implements IDishServicePort {
 
     @Override
     public List<Dish> dishesAllByRestaurantById(Long idRestaurant, Integer page, Integer size) {
+        System.out.println("idRestaurant llega hasta acaaaaaa: = " + idRestaurant + ", page = " + page + ", size = " + size);
         List<Dish> dishModelList=dishPersistencePort.dishesAllByRestaurantId(idRestaurant, page,size);
         List<Dish> platosActivos=new ArrayList<>();
         for (Dish dishModel:dishModelList) {
@@ -82,6 +83,6 @@ public class DishUseCase implements IDishServicePort {
         if(bearerToken==null) throw new IllegalArgumentException();
         Long idOwnerAuth = token.getUserAuthenticationId(bearerToken);
         Long idOwnerRestaurant =  restaurantPersistencePort.getRestaurantById(dish.getRestaurantId().getId()).getIdOwner();
-        if(idOwnerAuth.equals(idOwnerRestaurant)) throw new IllegalArgumentException("No es propietario de este restaurante");
+        if(!idOwnerAuth.equals(idOwnerRestaurant) ) throw new IllegalArgumentException("No es propietario de este restaurante");
     }
 }

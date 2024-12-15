@@ -2,7 +2,7 @@ package com.plazoleta.plazoleta_service.domain.usecase;
 
 import com.plazoleta.plazoleta_service.domain.api.IRestaurantAndEmployeeServicePort;
 import com.plazoleta.plazoleta_service.domain.model.RestaurantAndEmployee;
-import com.plazoleta.plazoleta_service.domain.spi.IRestaurantAndEmployeePersistencePort;
+import com.plazoleta.plazoleta_service.domain.spi.persistence.IRestaurantAndEmployeePersistencePort;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;

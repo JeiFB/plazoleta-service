@@ -1,30 +1,31 @@
 package com.plazoleta.plazoleta_service.infrastructure.configuration;
 
 import com.plazoleta.plazoleta_service.domain.api.IDishServicePort;
+import com.plazoleta.plazoleta_service.domain.api.IOrderServicePort;
 import com.plazoleta.plazoleta_service.domain.api.IRestaurantAndEmployeeServicePort;
 import com.plazoleta.plazoleta_service.domain.api.IRestaurantServicePort;
-import com.plazoleta.plazoleta_service.domain.spi.IDishPersistencePort;
-import com.plazoleta.plazoleta_service.domain.spi.IRestaurantAndEmployeePersistencePort;
-import com.plazoleta.plazoleta_service.domain.spi.IRestaurantPersistencePort;
+import com.plazoleta.plazoleta_service.domain.spi.persistence.IDishPersistencePort;
+import com.plazoleta.plazoleta_service.domain.spi.persistence.IOrderPersistencePort;
+import com.plazoleta.plazoleta_service.domain.spi.persistence.IRestaurantAndEmployeePersistencePort;
+import com.plazoleta.plazoleta_service.domain.spi.persistence.IRestaurantPersistencePort;
 import com.plazoleta.plazoleta_service.domain.spi.bearertoken.IToken;
 import com.plazoleta.plazoleta_service.domain.spi.feignClients.IUserFeignClientPort;
 import com.plazoleta.plazoleta_service.domain.usecase.DishUseCase;
+import com.plazoleta.plazoleta_service.domain.usecase.OrderUseCase;
 import com.plazoleta.plazoleta_service.domain.usecase.RestaurantAndEmployeeUseCase;
 import com.plazoleta.plazoleta_service.domain.usecase.RestaurantUseCase;
 import com.plazoleta.plazoleta_service.infrastructure.output.feignclients.IUserFeignClients;
 import com.plazoleta.plazoleta_service.infrastructure.output.feignclients.adapter.UserFeignAdapter;
 import com.plazoleta.plazoleta_service.infrastructure.output.feignclients.mapper.IUserDtoMapper;
 import com.plazoleta.plazoleta_service.infrastructure.output.jpa.adapter.DishJpaAdapter;
+import com.plazoleta.plazoleta_service.infrastructure.output.jpa.adapter.OrderJpaAdapter;
 import com.plazoleta.plazoleta_service.infrastructure.output.jpa.adapter.RestaurantAndEmployeeJpaAdapter;
 import com.plazoleta.plazoleta_service.infrastructure.output.jpa.adapter.RestaurantJpaAdapter;
-import com.plazoleta.plazoleta_service.infrastructure.output.jpa.mapper.IDishEntityMapper;
-import com.plazoleta.plazoleta_service.infrastructure.output.jpa.mapper.IRestaurantAndEmployeeEntityMapper;
-import com.plazoleta.plazoleta_service.infrastructure.output.jpa.mapper.IRestaurantEntityMapper;
-import com.plazoleta.plazoleta_service.infrastructure.output.jpa.repository.IDishRepository;
-import com.plazoleta.plazoleta_service.infrastructure.output.jpa.repository.IRestaurantAndEmployeeRepository;
-import com.plazoleta.plazoleta_service.infrastructure.output.jpa.repository.IRestaurantRepository;
+import com.plazoleta.plazoleta_service.infrastructure.output.jpa.mapper.*;
+import com.plazoleta.plazoleta_service.infrastructure.output.jpa.repository.*;
 import com.plazoleta.plazoleta_service.infrastructure.output.token.TokeAdapter;
 import lombok.RequiredArgsConstructor;
+import org.bouncycastle.pqc.crypto.util.PQCOtherInfoGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -43,6 +44,15 @@ public class BeanConfiguration {
 
     private final IRestaurantAndEmployeeRepository restaurantAndEmployeeRepository;
     private final IRestaurantAndEmployeeEntityMapper restaurantAndEmployeeEntityMapper;
+
+    private final IOrderRepository orderRepository;
+    private final IOrderEntityMapper orderEntityMapper;
+
+    private final IOrderDishRepository orderDishRepository;
+    private final IOrderDishEntityMapper orderDishEntityMapper;
+
+
+
 
     @Bean
     public IRestaurantPersistencePort restaurantPersistencePort(){
@@ -85,4 +95,13 @@ public class BeanConfiguration {
         return new TokeAdapter();
     }
 
+    @Bean
+    public IOrderPersistencePort orderPersistencePort(){
+        return new OrderJpaAdapter(orderRepository, orderEntityMapper, orderDishRepository, orderDishEntityMapper);
+    }
+
+    @Bean
+    public IOrderServicePort orderServicePort(){
+        return new OrderUseCase(orderPersistencePort(), token(), restaurantPersistencePort(), dishPersistencePort(), restaurantAndEmployeePersistencePort());
+    }
 }
