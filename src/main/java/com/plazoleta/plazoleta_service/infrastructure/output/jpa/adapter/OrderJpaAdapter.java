@@ -10,10 +10,12 @@ import com.plazoleta.plazoleta_service.infrastructure.output.jpa.mapper.IOrderEn
 import com.plazoleta.plazoleta_service.infrastructure.output.jpa.repository.IOrderDishRepository;
 import com.plazoleta.plazoleta_service.infrastructure.output.jpa.repository.IOrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 @RequiredArgsConstructor
 public class OrderJpaAdapter implements IOrderPersistencePort {
     private final IOrderRepository orderRepository;
@@ -37,7 +39,7 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
     }
 
     @Override
-    public Boolean existsByIdClientAndState(Long id, String state) {
-        return orderRepository.existsByIdClientAnsState(id, state);
+    public boolean existsByIdClientAndState(Long id, String state) {
+        return orderRepository.existsByIdClientAndState(id, state);
     }
 }

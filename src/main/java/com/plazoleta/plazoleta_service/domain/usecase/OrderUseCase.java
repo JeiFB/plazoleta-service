@@ -11,7 +11,6 @@ import com.plazoleta.plazoleta_service.domain.spi.bearertoken.IToken;
 import com.plazoleta.plazoleta_service.domain.spi.persistence.IDishPersistencePort;
 import com.plazoleta.plazoleta_service.domain.spi.persistence.IOrderPersistencePort;
 import com.plazoleta.plazoleta_service.domain.spi.persistence.IRestaurantPersistencePort;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ public class OrderUseCase implements IOrderServicePort {
 
         if(orderPersistencePort.existsByIdClientAndState(idClientAuth, state.get(0))||
                 orderPersistencePort.existsByIdClientAndState(idClientAuth, state.get(1)) ||
-                orderPersistencePort.existsByIdClientAndState(idClientAuth, state.get(2))) throw  new IllegalArgumentException("cliente no tiene orden");
+                orderPersistencePort.existsByIdClientAndState(idClientAuth, state.get(2))) throw  new IllegalArgumentException("cliente tiene orden");
 
         Long idRestaurant = orderRequestModel.getRestaurantId();
 
@@ -44,7 +43,7 @@ public class OrderUseCase implements IOrderServicePort {
 
 
         if(restaurant == null) throw new IllegalArgumentException("restaurante no existe");
-        Order orderModel = new Order(-1L, idClientAuth, date, "PENDIENTE", null, restaurant);
+        Order orderModel = new Order(null, idClientAuth, date, "PENDIENTE", null, restaurant);
 
         List<OrderDishRequestModel> orderDishes = orderRequestModel.getDishes();
         if(orderDishes.isEmpty()){
@@ -54,14 +53,14 @@ public class OrderUseCase implements IOrderServicePort {
             Dish dish = dishPersistencePort.getDishById(orderDishes.get(i).getIdDish());
             if (dish == null) throw new IllegalArgumentException("plato no existe");
             if (dish.getRestaurantId().getId() != orderModel.getRestaurant().getId()) throw new IllegalArgumentException("pedido no es de ese restaurante");
-            if(!dish.getActive()) throw new IllegalArgumentException("este plato no esta disponivle");
+            if(!dish.getActive()) throw new IllegalArgumentException("este plato no esta disponible");
         }
         Order order = orderPersistencePort.saveOrder(orderModel);
 
         List<OrderDish> orderDishesList = new ArrayList<>();
         for (int i=0; i<orderDishes.size();i++){
             Dish dishModel= dishPersistencePort.getDishById(orderDishes.get(i).getIdDish());
-            OrderDish orderDish = new OrderDish(-1L, order,dishModel, String.valueOf(orderDishes.get(i).getAmount()));
+            OrderDish orderDish = new OrderDish(null, order,dishModel, String.valueOf(orderDishes.get(i).getAmount()));
             orderDishesList.add(orderDish);
         }
 

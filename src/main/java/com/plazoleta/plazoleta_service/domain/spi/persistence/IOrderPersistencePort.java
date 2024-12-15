@@ -8,6 +8,6 @@ import java.util.List;
 public interface IOrderPersistencePort {
     Order saveOrder(Order order);
     void saveOrderDish(List<OrderDish> orderDishes);
-    Boolean existsByIdClientAndState(Long id, String state);
+    boolean existsByIdClientAndState(Long id, String state);
 
 }

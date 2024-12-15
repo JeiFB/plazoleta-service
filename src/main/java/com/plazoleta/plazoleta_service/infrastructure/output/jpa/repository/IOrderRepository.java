@@ -4,5 +4,5 @@ import com.plazoleta.plazoleta_service.infrastructure.output.jpa.entity.OrderEnt
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface IOrderRepository extends JpaRepository<OrderEntity,Long> {
-    boolean existsByIdClientAnsState(Long id, String state);
+    boolean existsByIdClientAndState(Long id, String state);
 }

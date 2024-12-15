@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
@@ -23,6 +24,9 @@ public class OrderEntity {
 
     @Column(name = "client_id", nullable = false)
     private Long idClient;
+
+    @Column(nullable = false)
+    private String state;
 
     @Column(nullable = false)
     private Date date;

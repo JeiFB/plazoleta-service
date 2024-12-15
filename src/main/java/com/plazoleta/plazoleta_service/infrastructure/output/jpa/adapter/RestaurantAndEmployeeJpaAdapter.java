@@ -6,10 +6,12 @@ import com.plazoleta.plazoleta_service.infrastructure.output.jpa.entity.Restaura
 import com.plazoleta.plazoleta_service.infrastructure.output.jpa.mapper.IRestaurantAndEmployeeEntityMapper;
 import com.plazoleta.plazoleta_service.infrastructure.output.jpa.repository.IRestaurantAndEmployeeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
+@Component
 @RequiredArgsConstructor
 public class RestaurantAndEmployeeJpaAdapter implements IRestaurantAndEmployeePersistencePort {
 
