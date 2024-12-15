@@ -107,4 +107,30 @@ public class OrderUseCase implements IOrderServicePort {
         }
         return listaPedidosResponse;
     }
+
+    @Override
+    public void takeOrderAndUpdateStatus(Long idOrder, String state) {
+        if(!state.equals("EN_PREPARACION")) throw new IllegalArgumentException("Ya esta en preparacion") ;
+        if(Boolean.FALSE.equals(orderPersistencePort.existsByIdAndState(idOrder, "PENDIENTE"))) throw new IllegalArgumentException("Este pedido no existe");
+
+        String bearerToken = token.getBearerToken();
+        if(bearerToken==null) throw new IllegalArgumentException("NO existe propietario");
+        Long idEmployeeAuth = token.getUserAuthenticationId(bearerToken);
+        RestaurantAndEmployee restaurantAndEmployee= restaurantAndEmployeePersistencePort.findByEmployeeId(idEmployeeAuth);
+        if(restaurantAndEmployee==null) throw new IllegalArgumentException("no es empleado de este restaurante");
+        Order orderModel= orderPersistencePort.getOrderById(idOrder);
+        if(orderModel==null) throw new IllegalArgumentException("no hay orden");
+
+        Long idRestaurantEmployeeAuth = restaurantAndEmployee.getRestaurantId();
+        Long idRestaurantOrder = orderModel.getRestaurant().getId();
+
+        if(idRestaurantEmployeeAuth!=idRestaurantOrder) throw new IllegalArgumentException("este pedido no es de tu restautante");
+
+        orderModel.setChef(restaurantAndEmployee);
+        orderModel.setState(state);
+
+        orderPersistencePort.saveOrder(orderModel);
+    }
+
+
 }

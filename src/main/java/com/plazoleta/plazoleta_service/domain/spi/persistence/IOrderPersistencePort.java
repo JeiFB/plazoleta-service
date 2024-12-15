@@ -11,5 +11,7 @@ public interface IOrderPersistencePort {
     boolean existsByIdClientAndState(Long id, String state);
     List<Order> getAllOrderWithPagination(Integer page, Integer size, Long restaurantId, String state);
     List<OrderDish> getAllOrdersByOrder(Long orderId);
+    Order getOrderById(Long id);
+    Boolean existsByIdAndState(Long id, String state);
 
 }
