@@ -16,5 +16,5 @@ public class OrderResponseDto {
     private Long idClient;
     private Long idChef;
     private Date date;
-    private List<OrderDishRequestDto> orderDishes;
+    private List<OrderDishResponseDto> orderDishes;
 }
