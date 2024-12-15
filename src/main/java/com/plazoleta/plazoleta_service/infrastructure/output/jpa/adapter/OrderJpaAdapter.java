@@ -42,4 +42,14 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
     public boolean existsByIdClientAndState(Long id, String state) {
         return orderRepository.existsByIdClientAndState(id, state);
     }
+
+    @Override
+    public List<Order> getAllOrderWithPagination(Integer page, Integer size, Long restaurantId, String state) {
+        return List.of();
+    }
+
+    @Override
+    public List<OrderDish> getAllOrdersByOrder(Long orderId) {
+        return List.of();
+    }
 }
