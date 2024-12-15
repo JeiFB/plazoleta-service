@@ -51,4 +51,20 @@ public class OrderRestController {
         return ResponseEntity.ok(orderHandler.getAllOrdersWithPagination(page, size, state));
     }
 
+    @Operation(summary = "Take order and update status")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Order taken", content = @Content),
+            @ApiResponse(responseCode = "409", description = "Order doesn't exists", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Bad request", content = @Content),
+            @ApiResponse(responseCode = "403", description = "No authorized", content = @Content)
+    })
+    @PutMapping("/takeOrderAndUpdateStatus/{idOrder}/status/{status}")
+    @PreAuthorize("hasAuthority('EMPLEADO')")
+    public ResponseEntity<Void> takeOrderAndUpdateStatus(@PathVariable Long idOrder, @PathVariable String status) {
+        if (idOrder <= 0L || status.isBlank() || status.isEmpty())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        orderHandler.takeOrderAndUpdateStatus(idOrder, status);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

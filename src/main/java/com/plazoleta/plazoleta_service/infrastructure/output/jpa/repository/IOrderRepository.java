@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface IOrderRepository extends JpaRepository<OrderEntity,Long> {
     Page<OrderEntity> findByRestaurantIdAndState(Long id, String state, Pageable pageable);
     boolean existsByIdClientAndState(Long id, String state);
+    boolean existsByIdAndState(Long id, String state);
 }

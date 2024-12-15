@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -61,5 +62,17 @@ public class OrderJpaAdapter implements IOrderPersistencePort {
         List<OrderDishEntity> orderDishEntities = orderDishRepository.findByOrderId(orderId);
         if(orderDishEntities.isEmpty()) throw  new IllegalArgumentException("no hay pedidos");
         return orderDishEntityMapper.toOrderDishModelList(orderDishEntities);
+    }
+
+    @Override
+    public Order getOrderById(Long id) {
+        Optional<OrderEntity> orderEntityOptional = orderRepository.findById(id);
+        OrderEntity orderEntity = orderEntityOptional.orElse(null);
+        return orderEntityMapper.toOrder(orderEntity);
+    }
+
+    @Override
+    public Boolean existsByIdAndState(Long id, String state) {
+        return orderRepository.existsByIdAndState(id,state);
     }
 }
