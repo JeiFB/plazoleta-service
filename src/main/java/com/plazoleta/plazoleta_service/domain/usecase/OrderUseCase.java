@@ -1,15 +1,15 @@
 package com.plazoleta.plazoleta_service.domain.usecase;
 
 import com.plazoleta.plazoleta_service.domain.api.IOrderServicePort;
-import com.plazoleta.plazoleta_service.domain.model.Dish;
-import com.plazoleta.plazoleta_service.domain.model.Order;
-import com.plazoleta.plazoleta_service.domain.model.OrderDish;
-import com.plazoleta.plazoleta_service.domain.model.Restaurant;
+import com.plazoleta.plazoleta_service.domain.model.*;
 import com.plazoleta.plazoleta_service.domain.model.orders.OrderDishRequestModel;
+import com.plazoleta.plazoleta_service.domain.model.orders.OrderDishResponseModel;
 import com.plazoleta.plazoleta_service.domain.model.orders.OrderRequestModel;
+import com.plazoleta.plazoleta_service.domain.model.orders.OrderResponseModel;
 import com.plazoleta.plazoleta_service.domain.spi.bearertoken.IToken;
 import com.plazoleta.plazoleta_service.domain.spi.persistence.IDishPersistencePort;
 import com.plazoleta.plazoleta_service.domain.spi.persistence.IOrderPersistencePort;
+import com.plazoleta.plazoleta_service.domain.spi.persistence.IRestaurantAndEmployeePersistencePort;
 import com.plazoleta.plazoleta_service.domain.spi.persistence.IRestaurantPersistencePort;
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +24,8 @@ public class OrderUseCase implements IOrderServicePort {
     private  final IToken token;
     private  final IRestaurantPersistencePort restaurantPersistencePort;
     private final IDishPersistencePort dishPersistencePort;
+    private  final IRestaurantAndEmployeePersistencePort restaurantAndEmployeePersistencePort;
+
     @Override
     public void saveOrder(OrderRequestModel orderRequestModel) {
         Date date = new Date();
@@ -65,5 +67,44 @@ public class OrderUseCase implements IOrderServicePort {
         }
 
         orderPersistencePort.saveOrderDish(orderDishesList);
+    }
+
+    @Override
+    public List<OrderResponseModel> getAllOrderWithPagination(Integer page, Integer size, String state) {
+        String bearerToken = token.getBearerToken();
+        if(bearerToken==null) throw new IllegalArgumentException("usuaro invalido");
+        Long idEmployeeAuth = token.getUserAuthenticationId(bearerToken);
+        RestaurantAndEmployee restaurantAndEmployee = restaurantAndEmployeePersistencePort.findByEmployeeId(idEmployeeAuth);
+
+        List<OrderResponseModel> listaPedidosResponse = new ArrayList<>();
+        Long restauranteId = restaurantAndEmployee.getRestaurantId();
+        List<Order> pedidos = orderPersistencePort.getAllOrderWithPagination(page, size,restauranteId ,state);
+
+        for (int i=0; i<pedidos.size();i++){
+            OrderResponseModel orderResponseModel = new OrderResponseModel();
+            orderResponseModel.setId(pedidos.get(i).getId());
+            orderResponseModel.setIdClient(pedidos.get(i).getIdClient());
+            if(pedidos.get(i).getChef()==null) orderResponseModel.setIdChef(null);
+            else orderResponseModel.setIdChef(pedidos.get(i).getChef().getId());
+            orderResponseModel.setDate(pedidos.get(i).getDate());
+            orderResponseModel.setOrderDishes(new ArrayList<>());
+
+            List<OrderDish>  pedidoPlatos = orderPersistencePort.getAllOrdersByOrder(pedidos.get(i).getId());
+            for (int k=0; k<pedidoPlatos.size(); k++){
+                Dish dishModel= dishPersistencePort.getDishById(pedidoPlatos.get(k).getDish().getId());
+                OrderDishResponseModel orderDishResponseModel = new OrderDishResponseModel();
+                orderDishResponseModel.setId(dishModel.getId());
+                orderDishResponseModel.setName(dishModel.getName());
+                orderDishResponseModel.setPrice(dishModel.getPrice());
+                orderDishResponseModel.setDescription(dishModel.getDescription());
+                orderDishResponseModel.setUrlImg(dishModel.getImageUrl());
+                orderDishResponseModel.setCategoryId(dishModel.getCategory());
+                orderDishResponseModel.setAmount(pedidoPlatos.get(k).getAmount());
+
+                orderResponseModel.getOrderDishes().add(orderDishResponseModel);
+            }
+            listaPedidosResponse.add(orderResponseModel);
+        }
+        return listaPedidosResponse;
     }
 }

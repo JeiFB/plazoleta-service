@@ -17,4 +17,5 @@ public class OrderDishResponseModel {
     private String description;
     private String urlImg;
     private Category categoryId;
+    private String amount;
 }
