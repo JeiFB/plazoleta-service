@@ -12,9 +12,9 @@ import lombok.Setter;
 public class User {
     private Long id;
     private String name;
-    private String lastNane;
-    private String documentNumber;
-    private String cellNumber;
+    private String lastName;
+    private String document;
+    private String numberCell;
     private String email;
     private String password;
     private Rol rol;

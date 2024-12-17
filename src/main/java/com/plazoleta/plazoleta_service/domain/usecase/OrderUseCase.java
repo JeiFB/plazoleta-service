@@ -7,6 +7,8 @@ import com.plazoleta.plazoleta_service.domain.model.orders.OrderDishResponseMode
 import com.plazoleta.plazoleta_service.domain.model.orders.OrderRequestModel;
 import com.plazoleta.plazoleta_service.domain.model.orders.OrderResponseModel;
 import com.plazoleta.plazoleta_service.domain.spi.bearertoken.IToken;
+import com.plazoleta.plazoleta_service.domain.spi.feignClients.ITwilioFeignClientPort;
+import com.plazoleta.plazoleta_service.domain.spi.feignClients.IUserFeignClientPort;
 import com.plazoleta.plazoleta_service.domain.spi.persistence.IDishPersistencePort;
 import com.plazoleta.plazoleta_service.domain.spi.persistence.IOrderPersistencePort;
 import com.plazoleta.plazoleta_service.domain.spi.persistence.IRestaurantAndEmployeePersistencePort;
@@ -25,6 +27,8 @@ public class OrderUseCase implements IOrderServicePort {
     private  final IRestaurantPersistencePort restaurantPersistencePort;
     private final IDishPersistencePort dishPersistencePort;
     private  final IRestaurantAndEmployeePersistencePort restaurantAndEmployeePersistencePort;
+    private  final IUserFeignClientPort userFeignClientPort;
+    private final ITwilioFeignClientPort twilioFeignClientPort;
 
     @Override
     public void saveOrder(OrderRequestModel orderRequestModel) {
@@ -130,6 +134,74 @@ public class OrderUseCase implements IOrderServicePort {
         orderModel.setState(state);
 
         orderPersistencePort.saveOrder(orderModel);
+    }
+
+    @Override
+    public void updateAndNotifyOrderReady(Long idOrder) {
+        if(Boolean.FALSE.equals(orderPersistencePort.existsByIdAndState(idOrder, "EN_PREPARACION"))) throw new IllegalArgumentException("tiene que estar listo");
+        String bearerToken = token.getBearerToken();
+        if(bearerToken==null) throw new IllegalArgumentException("no existe");
+        Long idEmployeeAuth = token.getUserAuthenticationId(bearerToken);
+        RestaurantAndEmployee restaurantEmployeeModel= restaurantAndEmployeePersistencePort.findByEmployeeId(idEmployeeAuth);
+        if(restaurantEmployeeModel==null) throw new IllegalArgumentException("restaurant no ");
+        Order orderModel= orderPersistencePort.getOrderById(idOrder);
+        if(orderModel==null) throw new IllegalArgumentException("Orden no existe");
+
+        Long idRestaurantEmployeeAuth = restaurantEmployeeModel.getRestaurantId();
+        Long idRestaurantOrder = orderModel.getRestaurant().getId();
+
+        if(idRestaurantEmployeeAuth!=idRestaurantOrder) throw new IllegalArgumentException("los restaurantes no coinciden");
+
+        orderModel.setState("LISTO");
+        orderPersistencePort.saveOrder(orderModel);
+
+        User userModel = userFeignClientPort.getUserById(orderModel.getIdClient());
+        String nombreCliente = userModel.getName();
+        String pin = validatePin(userModel);
+
+        String mensaje = "Buen día, señor(a) " + nombreCliente.toUpperCase() + ", su pedido ya está listo para recoger.\nRecuerda mostrar el siguiente pin " + pin + " para poder entregar tu pedido.";
+        String numeroCelular = "+573154416131";
+        // No coloco el celular del cliente, ya que Twilio solo deja enviar mensajes al celular de la cuenta creada
+        // String numeroCel = userModel.getCelular();
+
+        SmsMessage smsMessageModel = new SmsMessage(numeroCelular, mensaje);
+
+        twilioFeignClientPort.sendSmsMessage(smsMessageModel);
+        System.out.println("PASO POR ACAaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA X2");
+    }
+
+    @Override
+    public void deliverOrder(Long idOrder, String pin) {
+        if(Boolean.FALSE.equals(orderPersistencePort.existsByIdAndState(idOrder, "LISTO"))) throw new IllegalArgumentException("estado incorrecto");
+        String bearerToken = token.getBearerToken();
+        if(bearerToken==null) throw new IllegalArgumentException("no existe user");
+        Long idEmployeeAuth = token.getUserAuthenticationId(bearerToken);
+        RestaurantAndEmployee restaurantEmployeeModel= restaurantAndEmployeePersistencePort.findByEmployeeId(idEmployeeAuth);
+        if(restaurantEmployeeModel==null) throw new IllegalArgumentException("no existe usuario y empleado");
+        Order orderModel= orderPersistencePort.getOrderById(idOrder);
+        if(orderModel==null) throw new IllegalArgumentException("no existe orden");
+
+        Long idRestaurantEmployeeAuth = restaurantEmployeeModel.getRestaurantId();
+        Long idRestaurantOrder = orderModel.getRestaurant().getId();
+
+        if(idRestaurantEmployeeAuth!=idRestaurantOrder) throw new IllegalArgumentException("no coincide restaurante y empleado");
+
+        User userModel = userFeignClientPort.getUserById(orderModel.getIdClient());
+        String pin2 = validatePin(userModel);
+
+        if(!(validatePin(userModel)).equals(pin) && !pin.equals(0)) throw new IllegalArgumentException("pin incorrecto");
+
+
+        orderModel.setState("ENTREGADO");
+        orderPersistencePort.saveOrder(orderModel);
+    }
+
+    public String validatePin(User user){
+        String pinDocument = user.getDocument();
+        String pinName = user.getName();
+        String pinLastName = user.getLastName();
+        String pin = pinName.substring(pinName.length()-2)+pinDocument.substring(pinDocument.length()-4)+pinLastName.substring(pinLastName.length()-2);
+        return  pin;
     }
 
 

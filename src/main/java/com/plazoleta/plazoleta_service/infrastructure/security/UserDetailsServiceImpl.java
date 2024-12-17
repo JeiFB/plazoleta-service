@@ -15,11 +15,11 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private  final IUserFeignClients IUserFeignClients;
+    private  final IUserFeignClients iuserFeignClients;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserDto userDto = IUserFeignClients.getUserByEmail(email);
+        UserDto userDto = iuserFeignClients.getUserByEmail(email);
         return new UserDetailsImpl(userDto);
     }
 }

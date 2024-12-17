@@ -8,7 +8,7 @@ import lombok.Setter;
 public class UserDto {
     private Long id;
     private String name;
-    private String lastNane;
+    private String lastName;
     private String numberCell;
     private String document;
     private String email;

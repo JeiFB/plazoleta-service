@@ -4,6 +4,7 @@ import com.plazoleta.plazoleta_service.domain.api.IDishServicePort;
 import com.plazoleta.plazoleta_service.domain.api.IOrderServicePort;
 import com.plazoleta.plazoleta_service.domain.api.IRestaurantAndEmployeeServicePort;
 import com.plazoleta.plazoleta_service.domain.api.IRestaurantServicePort;
+import com.plazoleta.plazoleta_service.domain.spi.feignClients.ITwilioFeignClientPort;
 import com.plazoleta.plazoleta_service.domain.spi.persistence.IDishPersistencePort;
 import com.plazoleta.plazoleta_service.domain.spi.persistence.IOrderPersistencePort;
 import com.plazoleta.plazoleta_service.domain.spi.persistence.IRestaurantAndEmployeePersistencePort;
@@ -14,8 +15,11 @@ import com.plazoleta.plazoleta_service.domain.usecase.DishUseCase;
 import com.plazoleta.plazoleta_service.domain.usecase.OrderUseCase;
 import com.plazoleta.plazoleta_service.domain.usecase.RestaurantAndEmployeeUseCase;
 import com.plazoleta.plazoleta_service.domain.usecase.RestaurantUseCase;
+import com.plazoleta.plazoleta_service.infrastructure.output.feignclients.ITwilioFeignClients;
 import com.plazoleta.plazoleta_service.infrastructure.output.feignclients.IUserFeignClients;
+import com.plazoleta.plazoleta_service.infrastructure.output.feignclients.adapter.TwilioFeignAdapter;
 import com.plazoleta.plazoleta_service.infrastructure.output.feignclients.adapter.UserFeignAdapter;
+import com.plazoleta.plazoleta_service.infrastructure.output.feignclients.mapper.ITwilioMapper;
 import com.plazoleta.plazoleta_service.infrastructure.output.feignclients.mapper.IUserDtoMapper;
 import com.plazoleta.plazoleta_service.infrastructure.output.jpa.adapter.DishJpaAdapter;
 import com.plazoleta.plazoleta_service.infrastructure.output.jpa.adapter.OrderJpaAdapter;
@@ -51,7 +55,8 @@ public class BeanConfiguration {
     private final IOrderDishRepository orderDishRepository;
     private final IOrderDishEntityMapper orderDishEntityMapper;
 
-
+    private  final ITwilioFeignClients twilioFeignClients;
+    private  final ITwilioMapper twilioMapper;
 
 
     @Bean
@@ -102,6 +107,12 @@ public class BeanConfiguration {
 
     @Bean
     public IOrderServicePort orderServicePort(){
-        return new OrderUseCase(orderPersistencePort(), token(), restaurantPersistencePort(), dishPersistencePort(), restaurantAndEmployeePersistencePort());
+        return new OrderUseCase(orderPersistencePort(), token(), restaurantPersistencePort(), dishPersistencePort(), restaurantAndEmployeePersistencePort(),userFeignClientPort() , twilioFeignClientPort());
+    }
+
+
+    @Bean
+    ITwilioFeignClientPort twilioFeignClientPort(){
+        return new TwilioFeignAdapter(twilioFeignClients, twilioMapper);
     }
 }

@@ -36,4 +36,14 @@ public class OrderHandlerImpl implements IOrderHandler {
     public void takeOrderAndUpdateStatus(Long idOrder, String state) {
         orderServicePort.takeOrderAndUpdateStatus(idOrder, state);
     }
+
+    @Override
+    public void updateAndNotifyOrderReady(Long idOrder) {
+        orderServicePort.updateAndNotifyOrderReady(idOrder);
+    }
+
+    @Override
+    public void deliverOrder(Long idOrder, String pin) {
+        orderServicePort.deliverOrder(idOrder,pin);
+    }
 }

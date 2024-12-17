@@ -13,7 +13,7 @@ public class UserFeignAdapter implements IUserFeignClientPort {
 
     private final IUserFeignClients IUserFeignClients;
 
-    private  final IUserDtoMapper userDtoMapper;
+    private final IUserDtoMapper userDtoMapper;
 
     @Override
     public Boolean existUserById(Long id) {
@@ -30,5 +30,5 @@ public class UserFeignAdapter implements IUserFeignClientPort {
     public User getUserByEmail(String email) {
         UserDto userDto= IUserFeignClients.getUserByEmail(email);
         return userDtoMapper.toUserModel(userDto);
-    }
+}
 }
